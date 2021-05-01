@@ -18,12 +18,10 @@ public class HashMap {
         return -1;
     }
 
-    //TODO: ADD OPEN ADDRESSING FUNCTION
-
     private int HashFunction(int key)
     {
         int hash;
-        hash = key%100;
+        hash = (key % 19);
         //System.out.println(Math.abs(hash));
         return (Math.abs(hash)) % userNames.length;
     }
@@ -31,8 +29,15 @@ public class HashMap {
     public void addItem(HashPair pair)
     {
         int id = HashFunction(pair.getKey());
+        if (userNames[id] != null)
+            ++hits[id];
+        while(userNames[id] != null)//if its full
+        {
+            if (id == 100)
+                id = 0;
+            id++;
+        }
         userNames[id] = pair;
-        ++hits[id];
     }
 
     public void ViewMap(){
@@ -45,28 +50,13 @@ public class HashMap {
 
     public void HitTest(){
         System.out.println("\nHIT TEST!\n");
-        int maxids[]=new int[10];
-        for (int i=0; i<maxids.length; i++)
+        for (int i = 0; i < hits.length; i++)
         {
-            int max=-1;
-            for (int j=0; j<hits.length; j++)
+            if (userNames[i] == null)
             {
-                if (hits[j]>max)
-                {
-                    boolean found=false;
-                    for (int k=0; k<i && !found; k++) {
-                        if (maxids[k] == j)
-                            found = true;
-                    }
-                    if (!found)
-                    {
-                        max=hits[j];
-                        maxids[i]=j;
-                    }
-                }
+                if (hits[i] > 1)
+                    System.out.println(i + ": " + hits[i]);
             }
         }
-        for (int i=0; i<maxids.length; i++)
-            System.out.println(maxids[i]+": "+hits[maxids[i]]);
     }
 }

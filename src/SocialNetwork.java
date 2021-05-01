@@ -12,11 +12,6 @@ public class SocialNetwork {
     public SocialNetwork(){
 
     }
-
-
-    // public void LoadFiles(String pathName, )
-
-
     /**
      * Loading social network data from files.
      * The dataset contains two separate files for user names (NameList.csv) and
@@ -29,13 +24,14 @@ public class SocialNetwork {
     //private String[] userNames = new String[100];//can maybe take out new
     private HashPair[] userNames = new HashPair[100];//can maybe take out new
     HashMap map= new HashMap();
-    int asciiValue = 0;
+    int asciiValue;
     public void Load(){
 
         String currentLine;
         try (Scanner scanner = new Scanner(new File("NameList.csv"))) {
             scanner.useDelimiter("\r\n");
             while(scanner.hasNext()){
+                asciiValue = 0;
                 currentLine = scanner.next();
                 for(int i=0; i< currentLine.length(); i++)
                 {
@@ -44,7 +40,6 @@ public class SocialNetwork {
                 HashPair pair = new HashPair(asciiValue, currentLine);
                 map.addItem(pair);
             }
-
             map.ViewMap();
             map.HitTest();
         }
@@ -52,7 +47,6 @@ public class SocialNetwork {
         {
             System.err.println("File error: couldn't find NameList.csv");
         }
-
 //        try (Scanner scanner = new Scanner(new File("SocialNetworkData.csv"))) {
 //            scanner.useDelimiter("\r\n");
 //            i = 0;
@@ -66,9 +60,7 @@ public class SocialNetwork {
 //        {
 //            System.err.println("File error: couldn't find NameList.csv");
 //        }
-
     }
-
     /**
      * Locating a user from the network
      * @param fullName users full name as a String
@@ -77,10 +69,13 @@ public class SocialNetwork {
      * of the node from the graph.
      */
     public int FindUserID(String fullName){
-        for(int i=0; i< fullName.length(); i++)
+        asciiValue = 0;
+        for(int i=0; i < fullName.length(); i++)
         {
             asciiValue += fullName.charAt(i);
         }
+        System.out.println(fullName + " | " + asciiValue);
+        System.out.println();
         if (map.SearchItem(asciiValue, fullName) != -1) {
             System.out.println("USER FOUND!");
             return 0;
