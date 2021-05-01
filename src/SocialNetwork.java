@@ -33,7 +33,7 @@ public class SocialNetwork {
             while(scanner.hasNext()){
                 asciiValue = 0;
                 currentLine = scanner.next();
-                for(int i=0; i< currentLine.length(); i++)
+                for(int i=0; i < currentLine.length(); i++)
                 {
                     asciiValue += currentLine.charAt(i);
                 }
@@ -68,14 +68,13 @@ public class SocialNetwork {
      * based on your algorithm, you may also need to locate the reference
      * of the node from the graph.
      */
+
     public int FindUserID(String fullName){
         asciiValue = 0;
         for(int i=0; i < fullName.length(); i++)
         {
             asciiValue += fullName.charAt(i);
         }
-        System.out.println(fullName + " | " + asciiValue);
-        System.out.println();
         if (map.SearchItem(asciiValue, fullName) != -1) {
             System.out.println("USER FOUND!");
             return 0;

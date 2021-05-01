@@ -13,17 +13,30 @@ public class HashMap {
     public int SearchItem(int key, String name)
     {
         int id = HashFunction(key);
+        OpenAddressing(id);
         if (userNames[id] != null && userNames[id].getValue().equals(name))
             return id;
+        System.out.println(userNames[id].getValue() + " " +userNames[id].getKey() + "\n"
+                            + name + " " + id + "\n\n");
         return -1;
     }
 
     private int HashFunction(int key)
     {
-        int hash;
-        hash = (key % 19);
+        int hash = 0;
+        hash = (key % 100);
         //System.out.println(Math.abs(hash));
         return (Math.abs(hash)) % userNames.length;
+    }
+
+    private void OpenAddressing(int id)
+    {
+        while(userNames[id] != null)//if its full - open addressing
+        {
+            if (id == 100)
+                id = 0;
+            id++;
+        }
     }
 
     public void addItem(HashPair pair)
@@ -31,14 +44,11 @@ public class HashMap {
         int id = HashFunction(pair.getKey());
         if (userNames[id] != null)
             ++hits[id];
-        while(userNames[id] != null)//if its full
-        {
-            if (id == 100)
-                id = 0;
-            id++;
-        }
+        OpenAddressing(id);
         userNames[id] = pair;
     }
+
+    //TODO: need to do load factor if want to resize hash map
 
     public void ViewMap(){
         System.out.println("\nVIEWING MAP!\n");
@@ -52,6 +62,8 @@ public class HashMap {
         System.out.println("\nHIT TEST!\n");
         for (int i = 0; i < hits.length; i++)
         {
+            if (hits[i] > 1)
+                System.out.println(i + ": " + hits[i]);
             if (userNames[i] == null)
             {
                 if (hits[i] > 1)

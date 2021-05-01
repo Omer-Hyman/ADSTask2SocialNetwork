@@ -1,14 +1,4 @@
 public class HashPair {
-//    private String id, value;
-//
-//    public String getID() { return id;}
-//    public String getValue() { return value;}
-//
-//    HashPair(String id, String value)
-//    {
-//        this.id = id;
-//        this.value = value;
-//    }
     private int key;
     private String value;
 
