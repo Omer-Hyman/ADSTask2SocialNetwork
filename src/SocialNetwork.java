@@ -96,6 +96,10 @@ public class SocialNetwork {
      */
     public String[] GetMyFriends(String currentUserName){
         String[] myFriends = {"Dummy 1","Dummy 2","Dummy 3","Dummy 4","Dummy 5"};//TO Be replaced by the requested algorithm
+
+        int person = FindUserID(currentUserName);
+
+
         return myFriends;
 
     }

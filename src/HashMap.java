@@ -10,6 +10,9 @@ public class HashMap {
         Arrays.fill(hits, 0);
     }
 
+    //TODO: need to do load factor if want to resize hash map
+    //TODO: improve hash function
+
     public int SearchItem(int key, String name)
     {
         int id = HashFunction(key);
@@ -42,13 +45,12 @@ public class HashMap {
     public void addItem(HashPair pair)
     {
         int id = HashFunction(pair.getKey());
-        if (userNames[id] != null)
+        if (userNames[id] != null) {
             ++hits[id];
+        }
         OpenAddressing(id);
         userNames[id] = pair;
     }
-
-    //TODO: need to do load factor if want to resize hash map
 
     public void ViewMap(){
         System.out.println("\nVIEWING MAP!\n");
