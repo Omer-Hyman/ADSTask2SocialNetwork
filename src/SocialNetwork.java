@@ -20,15 +20,14 @@ public class SocialNetwork {
      * structure and algorithms for an effective loading function
      */
 
-    private String[] userNetwork = new String[965];     //user network values are - node 1,(connects to) node 2, weight
+    //private String[] userNetwork = new String[965];     //user network values are - node 1,(connects to) node 2, weight
     //private String[] userNames = new String[100];//can maybe take out new
-    private HashPair[] userNames = new HashPair[100];//can maybe take out new
     HashMap map= new HashMap();
+    ADS2Graph graph = new ADS2Graph(101);
     int asciiValue;
     public void Load(){
-
-        String currentLine;
         try (Scanner scanner = new Scanner(new File("NameList.csv"))) {
+            String currentLine;
             scanner.useDelimiter("\r\n");
             while(scanner.hasNext()){
                 asciiValue = 0;
@@ -47,20 +46,26 @@ public class SocialNetwork {
         {
             System.err.println("File error: couldn't find NameList.csv");
         }
-//        try (Scanner scanner = new Scanner(new File("SocialNetworkData.csv"))) {
-//            scanner.useDelimiter("\r\n");
-//            i = 0;
-//            while(scanner.hasNext()){
-//                currentLine = scanner.next();
-//                System.out.println(currentLine);
-//                userNetwork[i++]=currentLine;
-//            }
-//        }
-//        catch (FileNotFoundException e)
-//        {
-//            System.err.println("File error: couldn't find NameList.csv");
-//        }
+
+        try (Scanner scanner = new Scanner(new File("SocialNetworkData.csv"))) {
+            String[] currentLine;
+            int[] nodes = new int[2];
+            double weight = 0;
+            while(scanner.hasNext()){
+                currentLine = scanner.next().split(",");
+                nodes[0] = Integer.parseInt(currentLine[0]);
+                nodes[1] = Integer.parseInt(currentLine[1]);
+                weight = Double.parseDouble(currentLine[2]);
+                graph.AddEdge(nodes[0], nodes[1], weight);
+            }
+            graph.PrintMatrix();
+        }
+        catch (FileNotFoundException e)
+        {
+            System.err.println("File error: couldn't find SocialNetworkData.csv");
+        }
     }
+
     /**
      * Locating a user from the network
      * @param fullName users full name as a String
@@ -75,9 +80,10 @@ public class SocialNetwork {
         {
             asciiValue += fullName.charAt(i);
         }
-        if (map.SearchItem(asciiValue, fullName) != -1) {
+        int person = map.SearchItem(asciiValue, fullName);
+        if (person != -1) {
             System.out.println("USER FOUND!");
-            return 0;
+            return person;
         }
         else
             return -1;
@@ -95,13 +101,16 @@ public class SocialNetwork {
      * linked to the users node.
      */
     public String[] GetMyFriends(String currentUserName){
-        String[] myFriends = {"Dummy 1","Dummy 2","Dummy 3","Dummy 4","Dummy 5"};//TO Be replaced by the requested algorithm
+        String[] myFriends = new String[10];//WOULD BE BETTER TO GET INDEX STRAIGHT FROM WHEN IT'S WRITTEN TO HASH MAP
 
         int person = FindUserID(currentUserName);
-
-
+        int j = 0;
+        for (int i = 0; i < 100; i++)
+        {
+            if (graph.IsConnected(person, i))
+                myFriends[j++] = map.FindName(i);
+        }
         return myFriends;
-
     }
 
     /**

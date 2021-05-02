@@ -18,10 +18,18 @@ public class HashMap {
         int id = HashFunction(key);
         OpenAddressing(id);
         if (userNames[id] != null && userNames[id].getValue().equals(name))
-            return id;
-        System.out.println(userNames[id].getValue() + " " +userNames[id].getKey() + "\n"
-                            + name + " " + id + "\n\n");
+            return userNames[id].getOriginalIndex();
         return -1;
+    }
+
+    public String FindName(int index)
+    {
+        for (int i = 0; i < userNames.length;i++)
+        {
+            if (userNames[i] != null && userNames[i].getOriginalIndex() == index)
+                return userNames[i].getValue();
+        }
+        return null;
     }
 
     private int HashFunction(int key)
@@ -32,7 +40,7 @@ public class HashMap {
         return (Math.abs(hash)) % userNames.length;
     }
 
-    private void OpenAddressing(int id)
+    private int OpenAddressing(int id)
     {
         while(userNames[id] != null)//if its full - open addressing
         {
@@ -40,6 +48,7 @@ public class HashMap {
                 id = 0;
             id++;
         }
+        return id;
     }
 
     public void addItem(HashPair pair)

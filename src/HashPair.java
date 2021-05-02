@@ -1,6 +1,10 @@
 public class HashPair {
-    private int key;
+    private int key, originalIndex =1;
     private String value;
+
+    public int getOriginalIndex() {
+        return originalIndex;
+    }
 
     public int getKey() { return key;}
     public String getValue() { return value;}
@@ -9,5 +13,6 @@ public class HashPair {
     {
         this.key = id;
         this.value = value;
+        this.originalIndex++;
     }
 }
