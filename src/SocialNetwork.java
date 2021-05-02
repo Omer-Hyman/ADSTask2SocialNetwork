@@ -24,7 +24,7 @@ public class SocialNetwork {
     //private String[] userNames = new String[100];//can maybe take out new
     HashMap map= new HashMap();
     ADS2Graph graph = new ADS2Graph(101);
-    int asciiValue;
+    int asciiValue, i = 1;
     public void Load(){
         try (Scanner scanner = new Scanner(new File("NameList.csv"))) {
             String currentLine;
@@ -32,11 +32,7 @@ public class SocialNetwork {
             while(scanner.hasNext()){
                 asciiValue = 0;
                 currentLine = scanner.next();
-                for(int i=0; i < currentLine.length(); i++)
-                {
-                    asciiValue += currentLine.charAt(i);
-                }
-                HashPair pair = new HashPair(asciiValue, currentLine);
+                HashPair pair = new HashPair(i++, currentLine);
                 map.addItem(pair);
             }
             map.ViewMap();
@@ -58,7 +54,7 @@ public class SocialNetwork {
                 weight = Double.parseDouble(currentLine[2]);
                 graph.AddEdge(nodes[0], nodes[1], weight);
             }
-            graph.PrintMatrix();
+            //graph.PrintMatrix();
         }
         catch (FileNotFoundException e)
         {
@@ -75,12 +71,8 @@ public class SocialNetwork {
      */
 
     public int FindUserID(String fullName){
-        asciiValue = 0;
-        for(int i=0; i < fullName.length(); i++)
-        {
-            asciiValue += fullName.charAt(i);
-        }
-        int person = map.SearchItem(asciiValue, fullName);
+
+        int person = map.SearchItem(fullName);
         if (person != -1) {
             System.out.println("USER FOUND!");
             return person;
@@ -101,7 +93,7 @@ public class SocialNetwork {
      * linked to the users node.
      */
     public String[] GetMyFriends(String currentUserName){
-        String[] myFriends = new String[10];//WOULD BE BETTER TO GET INDEX STRAIGHT FROM WHEN IT'S WRITTEN TO HASH MAP
+        String[] myFriends = new String[20];//WOULD BE BETTER TO GET INDEX STRAIGHT FROM WHEN IT'S WRITTEN TO HASH MAP
 
         int person = FindUserID(currentUserName);
         int j = 0;

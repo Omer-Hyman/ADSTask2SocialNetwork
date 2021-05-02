@@ -13,59 +13,71 @@ public class HashMap {
     //TODO: need to do load factor if want to resize hash map
     //TODO: improve hash function
 
-    public int SearchItem(int key, String name)
+    public int SearchItem(String name)
     {
-        int id = HashFunction(key);
-        OpenAddressing(id);
-        if (userNames[id] != null && userNames[id].getValue().equals(name))
-            return userNames[id].getOriginalIndex();
-        return -1;
+        int index = 0, j =0;
+        for(int i=0; i < name.length(); i++) {
+            index += name.charAt(i);
+        }
+        index = HashFunction(index);
+        while (!userNames[index].getName().equals(name)) {
+            index = OpenAddressing(index);
+            j++;
+            if (j == 100)
+                return -1;
+        }
+        return userNames[index].getIndex();
+        //System.out.println("\nName searched for: " +name +"\nHash index you get: " + index + "\nName at that index: " + userNames[index].getName());
+//        if (userNames[index] != null && userNames[index].getName().equals(name))
+//            return userNames[index].getIndex();
     }
 
-    public String FindName(int index)
+    public void addItem(HashPair pair)
     {
-        for (int i = 0; i < userNames.length;i++)
-        {
-            if (userNames[i] != null && userNames[i].getOriginalIndex() == index)
-                return userNames[i].getValue();
+        int index = 0;
+        for(int i=0; i < pair.getName().length(); i++) {
+            index += pair.getName().charAt(i);
         }
-        return null;
+        index = HashFunction(index);
+        while (userNames[index] != null)
+            index = OpenAddressing(index);
+        if (userNames[index] != null) {
+            ++hits[index];
+        }
+        userNames[index] = pair;
     }
 
     private int HashFunction(int key)
     {
         int hash = 0;
         hash = (key % 100);
-        //System.out.println(Math.abs(hash));
-        return (Math.abs(hash)) % userNames.length;
-    }
+        hash = (Math.abs(hash)) % userNames.length;
 
-    private int OpenAddressing(int id)
+        return hash;
+    }
+    public String FindName(int index)
     {
-        while(userNames[id] != null)//if its full - open addressing
+        for (int i = 0; i < userNames.length;i++)
         {
-            if (id == 100)
-                id = 0;
-            id++;
+            if (userNames[i] != null && userNames[i].getIndex() == index)
+                return userNames[i].getName();
         }
-        return id;
+        return null;
     }
 
-    public void addItem(HashPair pair)
+    private int OpenAddressing(int index)
     {
-        int id = HashFunction(pair.getKey());
-        if (userNames[id] != null) {
-            ++hits[id];
-        }
-        OpenAddressing(id);
-        userNames[id] = pair;
+        if (index == 99)
+            index = 0;
+        index++;
+        return index;
     }
 
     public void ViewMap(){
         System.out.println("\nVIEWING MAP!\n");
         for (int i = 0; i < userNames.length; i++) {
             if (userNames[i] != null)
-                System.out.println(i + ": " + userNames[i].getKey() + " " + userNames[i].getValue());
+                System.out.println(i + ": " + userNames[i].getIndex() + " " + userNames[i].getName());
         }
     }
 
@@ -75,11 +87,14 @@ public class HashMap {
         {
             if (hits[i] > 1)
                 System.out.println(i + ": " + hits[i]);
-            if (userNames[i] == null)
-            {
-                if (hits[i] > 1)
-                    System.out.println(i + ": " + hits[i]);
-            }
+//            if (userNames[i] == null)
+//            {
+//                if (hits[i] > 1)
+//                    System.out.println(i + ": " + hits[i]);
+//            }
         }
+        for (int i = 0; i < userNames.length; i++)
+            if (userNames[i] == null)
+                System.out.println("Hash empty cell: " + i);
     }
 }
