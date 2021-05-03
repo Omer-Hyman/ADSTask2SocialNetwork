@@ -22,7 +22,7 @@ public class SocialNetwork {
      * structure and algorithms for an effective loading function
      */
 
-   HashMap map= new HashMap();
+    HashMap map= new HashMap();
     ADS2Graph graph = new ADS2Graph(101);
     int[] friends = new int[20];
     String[] people = new String[101];
@@ -110,7 +110,11 @@ public class SocialNetwork {
         for (int i = 0; i < 100; i++)
         {
             if (graph.IsConnected(person, i))//can probs be optimised with binary search or something
-                myFriends[j++] = map.FindName(i);
+            {
+                myFriends[j] = map.FindName(i);
+                friends[j] = i;
+                j++;
+            }
         }
         return myFriends;
     }
@@ -128,12 +132,11 @@ public class SocialNetwork {
      * top 3 closest candidates.
      */
     public String[] GetRecommended (String currentUserName){
-        String[] recommended = new String[3];
-        //int[] recommendedInt = graph.FindClosestNodeJings(FindUserID(currentUserName), );//graph.FindClosestNodeMine(FindUserID(currentUserName));
-        recommended[0] = FindUserID(recommendedInt[0]);
-        recommended[1] = FindUserID(recommendedInt[1]);
-        recommended[2] = FindUserID(recommendedInt[2]);
-
+        String[] recommended = new String[10];
+        int[] recommendedInt = graph.FindClosestNodeJings(FindUserID(currentUserName));
+        for (int i = 0; i < 10; i++) {
+            recommended[i] = FindUserID(recommendedInt[i]);
+        }
         return recommended;
     }
 }

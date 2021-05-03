@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class ADS2Graph {
 
 
@@ -41,13 +43,13 @@ public class ADS2Graph {
 
     private void InitializeLists(int startNode)
     {
-        tentativeDistance[startNode] = 0;
-        fromList[startNode] = startNode;
-        for (int i = 1; i < 100; i++)
+        for (int i = 0; i < 101; i++)
         {
             tentativeDistance[i] = Double.MAX_VALUE;
             fromList[i] = -1;
         }
+        tentativeDistance[startNode] = 0;
+        fromList[startNode] = startNode;
     }
 
     private int[] FindFriends(int currentNode)
@@ -61,35 +63,73 @@ public class ADS2Graph {
         return friends;
     }
 
-    public void FindClosestNodeJings(int startNode, int destination, String[] nameList)
+    public int[] FindClosestNodeJings(int startNode)
     {
         InitializeLists(startNode);
+        double distances[] = new double[101];
 
-        int currentNode = startNode;
-        while (currentNode != destination && tentativeDistance[currentNode] != Double.MAX_VALUE)
-        {
-            visitedNodes[currentNode] = true;
-            for (int i = 0; i < AdjMatrix.length; i++) {//i is next node
-                if ( !visitedNodes[i] //if next node is not visited, friends with current, and next's tentative is more than new offer
-                        && IsConnected(currentNode, i)
-                        && tentativeDistance[i] > (tentativeDistance[currentNode]+AdjMatrix[currentNode][i]))
-                {
-                    tentativeDistance[i] = tentativeDistance[currentNode] + AdjMatrix[currentNode][i];
-                    fromList[i] = currentNode;
+        int currentNode = startNode, destination = 0;
+
+        for (int k = 0; k < AdjMatrix.length; k++) {
+            if (!IsConnected(startNode,k)) //if k is not friends with start
+                destination = k;
+            else
+                destination = currentNode;
+
+            while (currentNode != destination && tentativeDistance[currentNode] != Double.MAX_VALUE) {
+                visitedNodes[currentNode] = true;
+                for (int i = 0; i < AdjMatrix.length; i++) {//i is next node
+                    if (    !visitedNodes[i] //if next node is not visited, friends with current, and next's current tentative is more than new offer
+                            && IsConnected(currentNode, i)
+                            && tentativeDistance[i] > (tentativeDistance[currentNode] + AdjMatrix[currentNode][i]))
+                    {
+                        tentativeDistance[i] = tentativeDistance[currentNode] + AdjMatrix[currentNode][i];
+                        fromList[i] = currentNode;
+                    }
+                }
+                currentNode = FindNewCurrent(destination);
+            }//runs Dijkstra on random node. tent distance of destination is what you supposed to compare
+            distances[destination] = tentativeDistance[destination];
+        }
+        int closestNode[] = new int[10];
+        int k = 0;
+        //Arrays.sort(distances);
+        for (int j = 0; j < 10; j++) {
+            Double min = distances[0];
+            for (int i = 0; i < distances.length; i++) {
+                //System.out.println(i + " " + distances[i]);
+                if (distances[i] < min && distances[i] != 0) {
+                    min = distances[i];
+                    k = i;
+                    distances[i] = Double.MAX_VALUE;
                 }
             }
-            currentNode = FindNewCurrent(destination);
+            closestNode[j] = --k;
         }
+
+
+//            double lowestTentative = Double.MAX_VALUE;
+//            for (int j = 0; j < distances.length; j++) {
+//                if (distances[j] < lowestTentative)
+//                {
+//                    lowestTentative = distances[j];
+//                    k = j;
+//                    distances[j] = Double.MAX_VALUE;
+//                }
+//            }
+//            closestNode[i] = k;
+//        }
+        return closestNode;
     }
 
     public int[] FindClosestNodeMine(int startNode) {
         InitializeLists(startNode);
-       // System.out.println(AdjMatrix.length);
-        int currentNode = startNode;
-        for (int j = 0; j < AdjMatrix.length; j++)
+        int currentNode = startNode, friends =1;
+        for (int j = 0; j < friends; j++)
         {
-            visitedNodes[currentNode] = true;
-            for (int i = 0; i < AdjMatrix.length; i++) {//i is next node
+            friends = 0;
+            for (int i = 0; i < AdjMatrix.length; i++) {//updates tent dist for current's friends
+                visitedNodes[currentNode] = true;
                 if (!visitedNodes[i] //if next node is not visited, friends with current, and next's tentative is more than new offer
                         && IsConnected(currentNode, i)
                         && tentativeDistance[i] > (tentativeDistance[currentNode] + AdjMatrix[currentNode][i]))
@@ -97,8 +137,12 @@ public class ADS2Graph {
                     tentativeDistance[i] = tentativeDistance[currentNode] + AdjMatrix[currentNode][i];
                     fromList[i] = currentNode;
                 }
+                else if (!IsConnected(currentNode, i))
+                    friends++;
             }
             //currentNode = FindNewCurrent();
+            if (currentNode == 0)
+                System.err.println("FIND NEW CURRENT RETURNED 0");
         }
 
         int closestNode[] = new int[3];
@@ -125,25 +169,15 @@ public class ADS2Graph {
         int newCurrent = destination;
 
         for (int i = 0; i < tentativeDistance.length; i++) {
-            if (!visitedNodes[i] && min_tentative>tentativeDistance[i])
+            if (!visitedNodes[i] && min_tentative>tentativeDistance[i])//find unvisited node with smallest tent distance
             {
                 min_tentative = tentativeDistance[i];
                 newCurrent = i;
             }
-        }//find unvisited node with smallest tent distance
+        }
         return newCurrent;
     }
 
-    private void PrintPath(String[] nameList, int startID, int destination)
-    {
-        System.out.println(nameList[destination]);
-        int previous = fromList[destination];
-        while (previous != startID)
-        {
-            System.out.println(nameList[previous]);
-            previous = fromList[previous];
-        }
-    }
 
     //    https://shu.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=c2674e2a-ea1a-4ecc-8de6-ace500f9ff6e
 
