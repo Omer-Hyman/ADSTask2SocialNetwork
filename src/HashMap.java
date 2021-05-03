@@ -10,6 +10,10 @@ public class HashMap {
         Arrays.fill(hits, 0);
     }
 
+    public HashPair[] getMap() {
+        return userNames;
+    }
+
     //TODO: need to do load factor if want to resize hash map
     //TODO: improve hash function
 
@@ -55,6 +59,7 @@ public class HashMap {
 
         return hash;
     }
+
     public String FindName(int index)
     {
         for (int i = 0; i < userNames.length;i++)

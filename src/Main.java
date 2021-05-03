@@ -29,6 +29,11 @@ public class Main extends JFrame {
                 }
                 else{
                     information.setText("User Information: User Name:"+currentUser+" User ID:"+ currentID);
+//                    int numberOfFriends = friendsNetwork.GetMyFriends(currentUser).length;
+//                    String[] friends = new String[numberOfFriends];
+//                    for (int i = 0; i < numberOfFriends; i++ )
+//                        friends[i] = friendsNetwork.GetMyFriends(currentUser)[i].getName();
+
                     String[] friends = friendsNetwork.GetMyFriends(currentUser);
                     FriendList.setListData(friends);
 

@@ -3,11 +3,13 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Scanner;
 
+
 /**
  * You can also develop help functions and new classes for your system. You
  * can change the skeleton code if you need but you do not allow to remove the
  * methods provided in this class.
  */
+
 public class SocialNetwork {
     public SocialNetwork(){
 
@@ -20,11 +22,16 @@ public class SocialNetwork {
      * structure and algorithms for an effective loading function
      */
 
-    //private String[] userNetwork = new String[965];     //user network values are - node 1,(connects to) node 2, weight
-    //private String[] userNames = new String[100];//can maybe take out new
-    HashMap map= new HashMap();
+   HashMap map= new HashMap();
     ADS2Graph graph = new ADS2Graph(101);
-    int asciiValue, i = 1;
+    int[] friends = new int[20];
+    String[] people = new String[101];
+
+    public int[] getFriends() {
+        return friends;
+    }
+
+    int asciiValue, i = 1, j =0;
     public void Load(){
         try (Scanner scanner = new Scanner(new File("NameList.csv"))) {
             String currentLine;
@@ -32,6 +39,7 @@ public class SocialNetwork {
             while(scanner.hasNext()){
                 asciiValue = 0;
                 currentLine = scanner.next();
+                people[j++] = currentLine;
                 HashPair pair = new HashPair(i++, currentLine);
                 map.addItem(pair);
             }
@@ -54,7 +62,6 @@ public class SocialNetwork {
                 weight = Double.parseDouble(currentLine[2]);
                 graph.AddEdge(nodes[0], nodes[1], weight);
             }
-            //graph.PrintMatrix();
         }
         catch (FileNotFoundException e)
         {
@@ -81,6 +88,10 @@ public class SocialNetwork {
             return -1;
     }
 
+    public String FindUserID(int index){
+        return people[index];
+
+    }
 
     /**
      * Listing ALL the friends belongs to the user
@@ -92,18 +103,18 @@ public class SocialNetwork {
      * @return You need to return all the user names in a String Array directly
      * linked to the users node.
      */
-    public String[] GetMyFriends(String currentUserName){
+    public String[] GetMyFriends(String currentUserName){//potentially overload to accept id or name - i.e. make two implementations of the method
         String[] myFriends = new String[20];//WOULD BE BETTER TO GET INDEX STRAIGHT FROM WHEN IT'S WRITTEN TO HASH MAP
-
         int person = FindUserID(currentUserName);
         int j = 0;
         for (int i = 0; i < 100; i++)
         {
-            if (graph.IsConnected(person, i))
+            if (graph.IsConnected(person, i))//can probs be optimised with binary search or something
                 myFriends[j++] = map.FindName(i);
         }
         return myFriends;
     }
+
 
     /**
      * Listing the top 10 recommended friends for the user
@@ -117,7 +128,12 @@ public class SocialNetwork {
      * top 3 closest candidates.
      */
     public String[] GetRecommended (String currentUserName){
-        String[] recommended = {"Dummy X","Dummy Y","Dummy Z"};//TO Be replaced by the requested algorithm
+        String[] recommended = new String[3];
+        //int[] recommendedInt = graph.FindClosestNodeJings(FindUserID(currentUserName), );//graph.FindClosestNodeMine(FindUserID(currentUserName));
+        recommended[0] = FindUserID(recommendedInt[0]);
+        recommended[1] = FindUserID(recommendedInt[1]);
+        recommended[2] = FindUserID(recommendedInt[2]);
+
         return recommended;
     }
 }
