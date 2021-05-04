@@ -52,74 +52,28 @@ public class ADS2Graph {
         fromList[startNode] = startNode;
     }
 
-    private int[] FindFriends(int currentNode)
-    {
-        int[] friends = new int[20];
-        int j = 0;
-        for (int i = 0; i < 100; i++) {
-            if (IsConnected(currentNode, i))//IF CURRENT NODE IS FRIENDS WITH I - 0-100
-                friends[j++] = i;
-        }
-        return friends;
-    }
 
-    public int[] FindClosestNodeJings(int startNode)
+    public double FindClosestNodeJings(int startNode, int destination)
     {
         InitializeLists(startNode);
-        double distances[] = new double[101];
 
-        int currentNode = startNode, destination = 0;
+        int currentNode = startNode;
 
-        for (int k = 0; k < AdjMatrix.length; k++) {
-            if (!IsConnected(startNode,k)) //if k is not friends with start
-                destination = k;
-            else
-                destination = currentNode;
-
-            while (currentNode != destination && tentativeDistance[currentNode] != Double.MAX_VALUE) {
-                visitedNodes[currentNode] = true;
-                for (int i = 0; i < AdjMatrix.length; i++) {//i is next node
-                    if (    !visitedNodes[i] //if next node is not visited, friends with current, and next's current tentative is more than new offer
-                            && IsConnected(currentNode, i)
-                            && tentativeDistance[i] > (tentativeDistance[currentNode] + AdjMatrix[currentNode][i]))
-                    {
-                        tentativeDistance[i] = tentativeDistance[currentNode] + AdjMatrix[currentNode][i];
-                        fromList[i] = currentNode;
-                    }
-                }
-                currentNode = FindNewCurrent(destination);
-            }//runs Dijkstra on random node. tent distance of destination is what you supposed to compare
-            distances[destination] = tentativeDistance[destination];
-        }
-        int closestNode[] = new int[10];
-        int k = 0;
-        //Arrays.sort(distances);
-        for (int j = 0; j < 10; j++) {
-            Double min = Double.MAX_VALUE;
-            for (int i = 0; i < distances.length; i++) {
-                //System.out.println(i + " " + distances[i]);
-                if (distances[i] < min && distances[i] != 0) {
-                    min = distances[i];
-                    k = i;
-                    distances[i] = Double.MAX_VALUE;
+        while (currentNode != destination && tentativeDistance[currentNode] != Double.MAX_VALUE) {
+            visitedNodes[currentNode] = true;
+            for (int i = 0; i < AdjMatrix.length; i++) {//i is next node
+                if (    !visitedNodes[i] //if next node is not visited, friends with current, and next's current tentative is more than new offer
+                        && IsConnected(currentNode, i)
+                        && tentativeDistance[i] > (tentativeDistance[currentNode] + AdjMatrix[currentNode][i]))
+                {
+                    tentativeDistance[i] = tentativeDistance[currentNode] + AdjMatrix[currentNode][i];
+                    fromList[i] = currentNode;
                 }
             }
-            closestNode[j] = --k;
-        }
+            currentNode = FindNewCurrent(destination);
+        }//runs Dijkstra on random node. tent distance of destination is what you supposed to compare
 
-
-//            double lowestTentative = Double.MAX_VALUE;
-//            for (int j = 0; j < distances.length; j++) {
-//                if (distances[j] < lowestTentative)
-//                {
-//                    lowestTentative = distances[j];
-//                    k = j;
-//                    distances[j] = Double.MAX_VALUE;
-//                }
-//            }
-//            closestNode[i] = k;
-//        }
-        return closestNode;
+        return tentativeDistance[destination];
     }
 
     public int[] FindClosestNodeMine(int startNode) {
