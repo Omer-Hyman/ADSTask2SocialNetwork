@@ -81,7 +81,6 @@ public class SocialNetwork {
 
         int person = map.SearchItem(fullName);
         if (person != -1) {
-            System.out.println("USER FOUND!");
             return person;
         }
         else
@@ -89,7 +88,7 @@ public class SocialNetwork {
     }
 
     public String FindUserID(int index){
-        return people[index];
+        return people[--index];
 
     }
 
@@ -133,27 +132,30 @@ public class SocialNetwork {
      */
     public String[] GetRecommended (String currentUserName){
         String[] recommended = new String[10];
-        int[] recommendedInt = new int[101];
+        int[] recommendedInt = new int[10];
         double[] recommendedDouble = new double[101];
+
         for (int i = 1; i < 101; i++) {
-            recommendedDouble[i] = graph.FindClosestNodeJings(FindUserID(currentUserName), i);
+            if (!graph.IsConnected(FindUserID(currentUserName), i))
+            {
+                recommendedDouble[i] = graph.FindClosestNodeJings(FindUserID(currentUserName), i);
+                System.out.println(i + " " +recommendedDouble[i]);
+            }
         }
+
         int k = 0;
         for (int j = 0; j < 10; j++) {
             Double min = Double.MAX_VALUE;
-            for (int i = 0; i < recommendedDouble.length; i++) {
-                //System.out.println(i + " " + distances[i]);
-                if (recommendedDouble[i] < min //&& recommendedDouble[i] != 0
-                ) {
+            for (int i = 1; i < 101; i++) {
+                if (recommendedDouble[i] < min && recommendedDouble[i] != 0) {
                     min = recommendedDouble[i];
                     k = i;
-                    recommendedDouble[i] = Double.MAX_VALUE;
                 }
             }
+            recommendedDouble[k] = Double.MAX_VALUE;
             recommendedInt[j] = k;
-        }
-        for (int i = 0; i < 10; i++) {
-            recommended[i] = FindUserID(recommendedInt[i]);
+            System.out.println(k);
+            recommended[j] = FindUserID(recommendedInt[j]);
         }
         return recommended;
     }

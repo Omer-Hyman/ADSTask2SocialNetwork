@@ -47,16 +47,15 @@ public class ADS2Graph {
         {
             tentativeDistance[i] = Double.MAX_VALUE;
             fromList[i] = -1;
+            visitedNodes[i] = false;
         }
         tentativeDistance[startNode] = 0;
         fromList[startNode] = startNode;
     }
 
-
     public double FindClosestNodeJings(int startNode, int destination)
     {
         InitializeLists(startNode);
-
         int currentNode = startNode;
 
         while (currentNode != destination && tentativeDistance[currentNode] != Double.MAX_VALUE) {
@@ -76,47 +75,6 @@ public class ADS2Graph {
         return tentativeDistance[destination];
     }
 
-    public int[] FindClosestNodeMine(int startNode) {
-        InitializeLists(startNode);
-        int currentNode = startNode, friends =1;
-        for (int j = 0; j < friends; j++)
-        {
-            friends = 0;
-            for (int i = 0; i < AdjMatrix.length; i++) {//updates tent dist for current's friends
-                visitedNodes[currentNode] = true;
-                if (!visitedNodes[i] //if next node is not visited, friends with current, and next's tentative is more than new offer
-                        && IsConnected(currentNode, i)
-                        && tentativeDistance[i] > (tentativeDistance[currentNode] + AdjMatrix[currentNode][i]))
-                {
-                    tentativeDistance[i] = tentativeDistance[currentNode] + AdjMatrix[currentNode][i];
-                    fromList[i] = currentNode;
-                }
-                else if (!IsConnected(currentNode, i))
-                    friends++;
-            }
-            //currentNode = FindNewCurrent();
-            if (currentNode == 0)
-                System.err.println("FIND NEW CURRENT RETURNED 0");
-        }
-
-        int closestNode[] = new int[3];
-        int k = 0, x =0;
-        for (int i = 0; i < 3; i++) {
-            double lowestTentative = Double.MAX_VALUE;
-            for (int j = 0; j < tentativeDistance.length; j++) {
-                if (tentativeDistance[j] < lowestTentative && !IsConnected(startNode, j))
-                {
-                    lowestTentative = tentativeDistance[j];
-                    k = j;
-                    tentativeDistance[j] = Double.MAX_VALUE;
-                }
-            }
-            closestNode[x] = k;
-            x++;
-        }
-        return closestNode;
-
-    }
 
     private int FindNewCurrent(int destination){
         double min_tentative = Double.MAX_VALUE;
