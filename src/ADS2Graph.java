@@ -2,9 +2,6 @@ import java.util.Arrays;
 
 public class ADS2Graph {
 
-
-//    SocialNetwork network = new SocialNetwork();
-
     private double[][] AdjMatrix;
     private boolean[] visitedNodes = new boolean[101];
     private double[] tentativeDistance = new double[101];
@@ -75,7 +72,6 @@ public class ADS2Graph {
         return tentativeDistance[destination];
     }
 
-
     private int FindNewCurrent(int destination){
         double min_tentative = Double.MAX_VALUE;
         int newCurrent = destination;
@@ -89,10 +85,4 @@ public class ADS2Graph {
         }
         return newCurrent;
     }
-
-
-    //    https://shu.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=c2674e2a-ea1a-4ecc-8de6-ace500f9ff6e
-
-
-
 }

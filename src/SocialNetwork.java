@@ -11,9 +11,7 @@ import java.util.Scanner;
  */
 
 public class SocialNetwork {
-    public SocialNetwork(){
-
-    }
+    public SocialNetwork(){ }
     /**
      * Loading social network data from files.
      * The dataset contains two separate files for user names (NameList.csv) and
@@ -22,7 +20,7 @@ public class SocialNetwork {
      * structure and algorithms for an effective loading function
      */
 
-    HashMap map= new HashMap();
+    ADS2List map= new ADS2List();
     ADS2Graph graph = new ADS2Graph(101);
     int[] friends = new int[20];
     String[] people = new String[101];
@@ -31,7 +29,7 @@ public class SocialNetwork {
         return friends;
     }
 
-    int asciiValue, i = 1, j =0;
+    int asciiValue, i = 1, j =1;
     public void Load(){
         try (Scanner scanner = new Scanner(new File("NameList.csv"))) {
             String currentLine;
@@ -78,7 +76,6 @@ public class SocialNetwork {
      */
 
     public int FindUserID(String fullName){
-
         int person = map.SearchItem(fullName);
         if (person != -1) {
             return person;
@@ -88,8 +85,7 @@ public class SocialNetwork {
     }
 
     public String FindUserID(int index){
-        return people[--index];
-
+        return people[index];
     }
 
     /**
@@ -117,7 +113,6 @@ public class SocialNetwork {
         }
         return myFriends;
     }
-
 
     /**
      * Listing the top 10 recommended friends for the user
