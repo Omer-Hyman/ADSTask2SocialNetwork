@@ -95,7 +95,7 @@ public class ADS2Graph {
         int k = 0;
         //Arrays.sort(distances);
         for (int j = 0; j < 10; j++) {
-            Double min = distances[0];
+            Double min = Double.MAX_VALUE;
             for (int i = 0; i < distances.length; i++) {
                 //System.out.println(i + " " + distances[i]);
                 if (distances[i] < min && distances[i] != 0) {
