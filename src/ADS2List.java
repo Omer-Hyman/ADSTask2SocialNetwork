@@ -10,13 +10,6 @@ public class ADS2List {
         Arrays.fill(hits, 0);
     }
 
-    public HashPair[] getMap() {
-        return userNames;
-    }
-
-    //TODO: need to do load factor and resize
-    //TODO: improve hash function
-
     public int SearchItem(String name)
     {
         int index = 0, j =0;

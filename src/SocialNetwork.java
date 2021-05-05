@@ -1,7 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.Scanner;
+import java.util.Date;
+import  java.util.Calendar;
 
 
 /**
@@ -24,12 +25,8 @@ public class SocialNetwork {
     ADS2Graph graph = new ADS2Graph(101);
     int[] friends = new int[20];
     String[] people = new String[101];
-
-    public int[] getFriends() {
-        return friends;
-    }
-
     int asciiValue, i = 1, j =1;
+
     public void Load(){
         try (Scanner scanner = new Scanner(new File("NameList.csv"))) {
             String currentLine;
@@ -76,12 +73,12 @@ public class SocialNetwork {
      */
 
     public int FindUserID(String fullName){
-        int person = map.SearchItem(fullName);
-        if (person != -1) {
-            return person;
+        for (int i = 1; i < 101; i++) {
+            if (fullName.equals(people[i]))
+                return i;
         }
-        else
-            return -1;
+        System.err.println("User Not Found!");
+        return -1;
     }
 
     public String FindUserID(int index){
@@ -98,13 +95,14 @@ public class SocialNetwork {
      * @return You need to return all the user names in a String Array directly
      * linked to the users node.
      */
+
     public String[] GetMyFriends(String currentUserName){//potentially overload to accept id or name - i.e. make two implementations of the method
-        String[] myFriends = new String[20];//WOULD BE BETTER TO GET INDEX STRAIGHT FROM WHEN IT'S WRITTEN TO HASH MAP
+        String[] myFriends = new String[20];
         int person = FindUserID(currentUserName);
         int j = 0;
         for (int i = 0; i < 100; i++)
         {
-            if (graph.IsConnected(person, i))//can probs be optimised with binary search or something
+            if (graph.IsConnected(person, i))//do binary search
             {
                 myFriends[j] = map.FindName(i);
                 friends[j] = i;
@@ -126,18 +124,22 @@ public class SocialNetwork {
      * top 3 closest candidates.
      */
     public String[] GetRecommended (String currentUserName){
+        long start = System.currentTimeMillis();
+        int z=0;
+        System.out.println("In recommended method");
         String[] recommended = new String[10];
         int[] recommendedInt = new int[10];
         double[] recommendedDouble = new double[101];
 
         for (int i = 1; i < 101; i++) {
+            z++;
             if (!graph.IsConnected(FindUserID(currentUserName), i))
             {
                 recommendedDouble[i] = graph.FindClosestNodeJings(FindUserID(currentUserName), i);
-                System.out.println(i + " " +recommendedDouble[i]);
             }
         }
-
+        System.out.println("Time taken: " + (System.currentTimeMillis() - start));
+        System.out.println("Shortest paths called " + z);
         int k = 0;
         for (int j = 0; j < 10; j++) {
             Double min = Double.MAX_VALUE;
@@ -149,9 +151,10 @@ public class SocialNetwork {
             }
             recommendedDouble[k] = Double.MAX_VALUE;
             recommendedInt[j] = k;
-            System.out.println(k);
             recommended[j] = FindUserID(recommendedInt[j]);
         }
+        System.out.println("Time taken: " + (System.currentTimeMillis() - start));
+
         return recommended;
     }
 }
