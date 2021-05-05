@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -9,10 +11,13 @@ public class Main extends JFrame {
     private JList FriendList;
     private JList SuggestedList;
     private JLabel information;
+    private JButton BlockFriend;
 
     private String currentUser;
     private int currentID;
     private SocialNetwork friendsNetwork;
+
+    private String friend;
 
     public Main() {
         //Load the data
@@ -28,7 +33,7 @@ public class Main extends JFrame {
                     information.setText("User Information: Unknown");
                 }
                 else{
-                    information.setText("User Information: User Name:"+currentUser+" User ID:"+ currentID);
+                    information.setText("User Information: User Name: "+currentUser+" User ID: "+ currentID);
 
                     String[] friends = friendsNetwork.GetMyFriends(currentUser);
                     FriendList.setListData(friends);
@@ -36,10 +41,33 @@ public class Main extends JFrame {
                     String[] recommendations = friendsNetwork.GetRecommended(currentUser);
                     SuggestedList.setListData(recommendations);
                 }
-
             }
         });
 
+        FriendList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+
+                JList source = (JList) e.getSource();
+                if(!e.getValueIsAdjusting() && !FriendList.getSelectionModel().isSelectionEmpty())
+                {
+                    friend = source.getSelectedValue().toString();
+                    BlockFriend.setVisible(true);
+                    BlockFriend.setText("Block " + friend);
+                }
+            }
+        });
+
+        BlockFriend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentUser = userName.getText();
+                friendsNetwork.BlockFriend(currentUser, friend);
+                String[] friends = friendsNetwork.GetMyFriends(currentUser);
+                FriendList.setListData(friends);
+                BlockFriend.setVisible(false);
+            }
+        });
 
         //Clear the input field
         userName.addMouseListener(new MouseAdapter() {

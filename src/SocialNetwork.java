@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Date;
 import  java.util.Calendar;
@@ -98,6 +99,7 @@ public class SocialNetwork {
 
     public String[] GetMyFriends(String currentUserName){//potentially overload to accept id or name - i.e. make two implementations of the method
         String[] myFriends = new String[20];
+        Arrays.fill(friends, 0);
         int person = FindUserID(currentUserName);
         int j = 0;
         for (int i = 0; i < 100; i++)
@@ -111,6 +113,12 @@ public class SocialNetwork {
         }
         return myFriends;
     }
+
+    public void BlockFriend(String user, String friend)
+    {
+        graph.RemoveFriendship(FindUserID(user), FindUserID(friend));
+    }
+
 
     /**
      * Listing the top 10 recommended friends for the user

@@ -21,6 +21,13 @@ public class ADS2Graph {
         AdjMatrix[node2][node1] = weight;
     }
 
+    public void RemoveFriendship(int node1, int node2)
+    {
+        AdjMatrix[node1][node2] = 0;
+        AdjMatrix[node2][node1] = 0;
+
+    }
+
     public boolean IsConnected(int node1, int node2)
     {
         return AdjMatrix[node1][node2] != 0 && AdjMatrix[node2][node1] != 0;
