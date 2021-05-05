@@ -118,6 +118,11 @@ public class SocialNetwork {
         graph.RemoveFriendship(FindUserID(user), FindUserID(friend));
     }
 
+    public void AddFriend(String user, String friend)
+    {
+        graph.AddFriendship(FindUserID(user), FindUserID(friend));
+    }
+
     /**
      * Listing the top 10 recommended friends for the user
      * In the task, you need to calculate the shortest distance between the

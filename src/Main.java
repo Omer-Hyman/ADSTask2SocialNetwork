@@ -12,6 +12,7 @@ public class Main extends JFrame {
     private JList SuggestedList;
     private JLabel information;
     private JButton BlockFriend;
+    private JButton AddFriend;
 
     private String currentUser;
     private int currentID;
@@ -68,6 +69,31 @@ public class Main extends JFrame {
                 String[] friends = friendsNetwork.GetMyFriends(currentUser);
                 FriendList.setListData(friends);
                 BlockFriend.setVisible(false);
+            }
+        });
+
+        SuggestedList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                JList source = (JList) e.getSource();
+                if(!e.getValueIsAdjusting() && !SuggestedList.getSelectionModel().isSelectionEmpty())
+                {
+                    if (source.getSelectedValue() != null) {
+                        friend = source.getSelectedValue().toString();
+                        AddFriend.setVisible(true);
+                        AddFriend.setText("Add " + friend);
+                    }
+                }
+            }
+        });
+        AddFriend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentUser = userName.getText();
+                friendsNetwork.AddFriend(currentUser, friend);
+                String[] friends = friendsNetwork.GetMyFriends(currentUser);
+                FriendList.setListData(friends);
+                AddFriend.setVisible(false);
             }
         });
 

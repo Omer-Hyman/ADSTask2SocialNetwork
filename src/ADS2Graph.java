@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Random;
 
 public class ADS2Graph {
 
@@ -21,11 +22,18 @@ public class ADS2Graph {
         AdjMatrix[node2][node1] = weight;
     }
 
+    public void AddFriendship(int node1, int node2)
+    {
+        Random r = new Random();
+        Double randomValue = Double.MIN_VALUE + (Double.MAX_VALUE - Double.MIN_VALUE ) * r.nextDouble();
+        AdjMatrix[node1][node2] = randomValue;
+        AdjMatrix[node2][node1] = randomValue;
+    }
+
     public void RemoveFriendship(int node1, int node2)
     {
         AdjMatrix[node1][node2] = 0;
         AdjMatrix[node2][node1] = 0;
-
     }
 
     public boolean IsConnected(int node1, int node2)
