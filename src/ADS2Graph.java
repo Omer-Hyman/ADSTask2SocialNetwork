@@ -57,7 +57,7 @@ public class ADS2Graph {
         fromList[startNode] = startNode;
     }
 
-    public double FindClosestNodeJings(int startNode, int destination)
+    public double FindClosestNode(int startNode, int destination)
     {
         InitializeLists(startNode);
         int currentNode = startNode;
@@ -65,7 +65,7 @@ public class ADS2Graph {
         while (currentNode != destination && tentativeDistance[currentNode] != Double.MAX_VALUE) {
             visitedNodes[currentNode] = true;
             for (int i = 0; i < AdjMatrix.length; i++) {//i is next node
-                if (    !visitedNodes[i] //if next node is not visited, friends with current, and next's current tentative is more than new offer
+                if (    !visitedNodes[i]                //if next node is not visited, friends with current, and next's current tentative is more than new offer
                         && IsConnected(currentNode, i)
                         && tentativeDistance[i] > (tentativeDistance[currentNode] + AdjMatrix[currentNode][i]))
                 {
@@ -74,7 +74,7 @@ public class ADS2Graph {
                 }
             }
             currentNode = FindNewCurrent(destination);
-        }//runs Dijkstra on random node. tent distance of destination is what you supposed to compare
+        }//runs Dijkstra on random node
 
         return tentativeDistance[destination];
     }

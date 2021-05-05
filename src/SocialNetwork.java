@@ -2,8 +2,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.Date;
-import  java.util.Calendar;
 
 
 /**
@@ -39,32 +37,33 @@ public class SocialNetwork {
                 HashPair pair = new HashPair(i++, currentLine);
                 map.addItem(pair);
             }
-            map.ViewMap();
-            map.HitTest();
-        }
-        catch (FileNotFoundException e)
-        {
-            System.err.println("File error: couldn't find NameList.csv");
-        }
+    //            map.ViewMap();
+    //            map.HitTest();
+      }
 
-        try (Scanner scanner = new Scanner(new File("SocialNetworkData.csv"))) {
-            String[] currentLine;
-            int[] nodes = new int[2];
-            double weight = 0;
-            while(scanner.hasNext()){
-                currentLine = scanner.next().split(",");
-                nodes[0] = Integer.parseInt(currentLine[0]);
-                nodes[1] = Integer.parseInt(currentLine[1]);
-                weight = Double.parseDouble(currentLine[2]);
-                graph.AddEdge(nodes[0], nodes[1], weight);
-            }
-        }
-        catch (FileNotFoundException e)
-        {
-            System.err.println("File error: couldn't find SocialNetworkData.csv");
+      catch (FileNotFoundException e)
+      {
+        System.err.println("File error: couldn't find NameList.csv");
+      }
+
+
+    try (Scanner scanner = new Scanner(new File("SocialNetworkData.csv"))) {
+        String[] currentLine;
+        int[] nodes = new int[2];
+        double weight = 0;
+        while(scanner.hasNext()){
+            currentLine = scanner.next().split(",");
+            nodes[0] = Integer.parseInt(currentLine[0]);
+            nodes[1] = Integer.parseInt(currentLine[1]);
+            weight = Double.parseDouble(currentLine[2]);
+            graph.AddEdge(nodes[0], nodes[1], weight);
         }
     }
-
+    catch (FileNotFoundException e)
+    {
+        System.err.println("File error: couldn't find SocialNetworkData.csv");
+    }
+}
     /**
      * Locating a user from the network
      * @param fullName users full name as a String
@@ -102,11 +101,11 @@ public class SocialNetwork {
         Arrays.fill(friends, 0);
         int person = FindUserID(currentUserName);
         int j = 0;
-        for (int i = 0; i < 100; i++)
+        for (int i = 1; i < 101; i++)
         {
             if (graph.IsConnected(person, i))//do binary search
             {
-                myFriends[j] = map.FindName(i);
+                myFriends[j] = people[i];
                 friends[j] = i;
                 j++;
             }
@@ -118,7 +117,6 @@ public class SocialNetwork {
     {
         graph.RemoveFriendship(FindUserID(user), FindUserID(friend));
     }
-
 
     /**
      * Listing the top 10 recommended friends for the user
@@ -132,9 +130,8 @@ public class SocialNetwork {
      * top 3 closest candidates.
      */
     public String[] GetRecommended (String currentUserName){
-        long start = System.currentTimeMillis();
-        int z=0;
         System.out.println("In recommended method");
+        int z=0;
         String[] recommended = new String[10];
         int[] recommendedInt = new int[10];
         double[] recommendedDouble = new double[101];
@@ -143,11 +140,9 @@ public class SocialNetwork {
             z++;
             if (!graph.IsConnected(FindUserID(currentUserName), i))
             {
-                recommendedDouble[i] = graph.FindClosestNodeJings(FindUserID(currentUserName), i);
+                recommendedDouble[i] = graph.FindClosestNode(FindUserID(currentUserName), i);
             }
         }
-        System.out.println("Time taken: " + (System.currentTimeMillis() - start));
-        System.out.println("Shortest paths called " + z);
         int k = 0;
         for (int j = 0; j < 10; j++) {
             Double min = Double.MAX_VALUE;
@@ -161,7 +156,6 @@ public class SocialNetwork {
             recommendedInt[j] = k;
             recommended[j] = FindUserID(recommendedInt[j]);
         }
-        System.out.println("Time taken: " + (System.currentTimeMillis() - start));
 
         return recommended;
     }

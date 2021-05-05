@@ -10,21 +10,6 @@ public class ADS2List {
         Arrays.fill(hits, 0);
     }
 
-    public int SearchItem(String name)
-    {
-        int index = 0, j =0;
-        for(int i=0; i < name.length(); i++) {
-            index += name.charAt(i);
-        }
-        index = HashFunction(index);
-        while (!userNames[index].getName().equals(name)) {
-            index = OpenAddressing(index);
-            j++;
-            if (j == 100)
-                return -1;
-        }
-        return userNames[index].getIndex();
-    }
 
     public void addItem(HashPair pair)
     {
@@ -33,11 +18,10 @@ public class ADS2List {
             index += pair.getName().charAt(i);
         }
         index = HashFunction(index);
+        if (userNames[index] != null)
+            ++hits[index];
         while (userNames[index] != null)
             index = OpenAddressing(index);
-        if (userNames[index] != null) {
-            ++hits[index];
-        }
         userNames[index] = pair;
     }
 
@@ -47,15 +31,6 @@ public class ADS2List {
         hash = (key % 100);
         hash = (Math.abs(hash)) % userNames.length;
         return hash;
-    }
-
-    public String FindName(int index)
-    {
-        for (HashPair userName : userNames) {
-            if (userName != null && userName.getIndex() == index)
-                return userName.getName();
-        }
-        return null;
     }
 
     private int OpenAddressing(int index)

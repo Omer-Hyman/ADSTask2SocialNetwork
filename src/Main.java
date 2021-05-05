@@ -51,9 +51,11 @@ public class Main extends JFrame {
                 JList source = (JList) e.getSource();
                 if(!e.getValueIsAdjusting() && !FriendList.getSelectionModel().isSelectionEmpty())
                 {
-                    friend = source.getSelectedValue().toString();
-                    BlockFriend.setVisible(true);
-                    BlockFriend.setText("Block " + friend);
+                    if (source.getSelectedValue() != null) {
+                        friend = source.getSelectedValue().toString();
+                        BlockFriend.setVisible(true);
+                        BlockFriend.setText("Block " + friend);
+                    }
                 }
             }
         });
